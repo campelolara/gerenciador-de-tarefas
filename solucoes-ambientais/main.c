@@ -1,15 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
-
-int main()
-{
-    //suporte acentuação
-    setlocale(LC_ALL, "Portuguese");
-
-    int escolha = 1;
-
-    //registro das industrias
+//registro das industrias
     typedef struct{
         char nome[50];
         char cpf[15];
@@ -25,6 +17,15 @@ int main()
         char estado[3];
         char cep[10];
     }industria;
+
+int main()
+{
+    //suporte acentuação
+    setlocale(LC_ALL, "Portuguese");
+
+    int escolha = 1;
+
+
 
     //tela inicial (após cadastro)
     printf("--------------------------------------\n");
