@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
+#include <string.h>
 
 //registro das industrias
 typedef struct{
@@ -25,17 +26,17 @@ int main(){
     setlocale(LC_ALL, "Portuguese");
     int escolha;
 
-    //tela inicial (após cadastro)
+    //tela inicial (apÃ³s cadastro)
     printf("--------------------------------------\n");
     printf("             TELA INICIAL               \n");
     printf("--------------------------------------\n");
-    printf("1. Ver dados das indústrias\n");
-    printf("2. Cadastrar uma nova indústria\n");
-    printf("3. Atualizar dados mensais de resíduos\n");
-    printf("4. Gerar relatórios\n");
+    printf("1. Ver dados das indÃºstrias\n");
+    printf("2. Cadastrar uma nova indÃºstria\n");
+    printf("3. Atualizar dados mensais de resÃ­duos\n");
+    printf("4. Gerar relatÃ³rios\n");
     printf("5. Sair\n");
 
-    printf("Escolha uma opção: ");
+    printf("Escolha uma opÃ§Ã£o: ");
     int opcao;
     scanf("%d", &opcao);
     system("cls");
@@ -44,16 +45,16 @@ int main(){
     while(escolha >= 0 || escolha <=5){
         switch(opcao){
             case 1:
-                //ver dados das indústrias
+                //ver dados das indÃºstrias
                 break;
             case 2:
-                //cadastrar uma nova indústria
+                //cadastrar uma nova indÃºstria
                 break;
             case 3:
-                //atualizar dados mensais de resíduos
+                //atualizar dados mensais de resÃ­duos
                 break;
             case 4:
-                //gerar relatórios
+                //gerar relatÃ³rios
                 break;
             case 5:
                 //sair
