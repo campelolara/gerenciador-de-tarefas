@@ -37,13 +37,12 @@ int main(){
     printf("5. Sair\n");
 
     printf("Escolha uma opção: ");
-    int opcao;
-    scanf("%d", &opcao);
+    scanf("%d", &escolha);
     system("cls");
 
 
     while(escolha >= 0 || escolha <=5){
-        switch(opcao){
+        switch(escolha){
             case 1:
                 //ver dados das indústrias
                 break;
