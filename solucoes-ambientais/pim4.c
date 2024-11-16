@@ -11,14 +11,16 @@ typedef struct {
     char nome_fantasia[50];
     char data_abertura[8];
     char rua[50];
-    int numero[5];
+    char numero[5];
     char bairro[50];
     char cidade[30];
     char estado[30];
-    int cep[8];
+    char cep[8];
     char email[30];
-    int telefone[9];
+    char telefone[9];
  }Industria;
+ 
+ 
 
 void cadastrar_industria(Industria empresas[], int *contador) {
     if (*contador >= 100) {
@@ -26,8 +28,8 @@ void cadastrar_industria(Industria empresas[], int *contador) {
         return;
     }
     
-    printf("CADASTRO DE IND⁄STRIA\n");
-    printf("RESPONS¡VEL\n");
+    printf("CADASTRO DE IND√öSTRIA\n");
+    printf("RESPONS√ÅVEL\n");
     printf("Nome: ");
     getchar();
     fgets(empresas[*contador].nome_responsavel, sizeof(empresas[*contador].nome_responsavel), stdin);
@@ -43,7 +45,7 @@ void cadastrar_industria(Industria empresas[], int *contador) {
     fgets(empresas[*contador].cnpj, sizeof(empresas[*contador].cnpj), stdin);
     empresas[*contador].cnpj[strcspn(empresas[*contador].cnpj, "\n")] = 0;
 
-	printf("Raz„o Social: ");
+	printf("Raz√£o Social: ");
     fgets(empresas[*contador].razao_social, sizeof(empresas[*contador].razao_social), stdin);
     empresas[*contador].razao_social[strcspn(empresas[*contador].razao_social, "\n")] = 0;
     
@@ -55,12 +57,12 @@ void cadastrar_industria(Industria empresas[], int *contador) {
     fgets(empresas[*contador].data_abertura, sizeof(empresas[*contador].data_abertura), stdin);
     empresas[*contador].data_abertura[strcspn(empresas[*contador].data_abertura, "\n")] = 0;
     
-    printf("ENDERE«O\n");
+    printf("ENDERE√áO\n");
     printf("Rua: ");
     fgets(empresas[*contador].rua, sizeof(empresas[*contador].rua), stdin);
     empresas[*contador].rua[strcspn(empresas[*contador].rua, "\n")] = 0;
     
-    printf("N˙mero: ");
+    printf("N√∫mero: ");
     fgets(empresas[*contador].numero, sizeof(empresas[*contador].numero), stdin);
     empresas[*contador].numero[strcspn(empresas[*contador].numero, "\n")] = 0;
     
@@ -89,11 +91,53 @@ void cadastrar_industria(Industria empresas[], int *contador) {
     fgets(empresas[*contador].telefone, sizeof(empresas[*contador].telefone), stdin);
     empresas[*contador].telefone[strcspn(empresas[*contador].telefone, "\n")] = 0;
     
-    printf("Ind˙stria cadastrada com sucesso!\n");
+    printf("Ind√∫stria cadastrada com sucesso!\n");
+    getch();
+    system("cls");
     (*contador)++;
 }
 
 
+
+void procurar_empresa(Industria empresas[], int contador){
+ 	if (contador == 0) {
+        printf("Nenhuma empresa cadastrada.\n");
+        getch();
+        system("cls");
+        return;
+    }
+	char nome_busca[50];
+    printf("Digite o nome da empresa que deseja buscar: ");
+    getchar();
+    fgets(nome_busca, sizeof(nome_busca), stdin);
+    nome_busca[strcspn(nome_busca, "\n")] = 0;
+    
+    int i, encontrou = 0;
+    for ( i = 0; i < contador; i++) {
+        if (strcmp(empresas[i].nome_empresa, nome_busca) == 0) {
+            encontrou = 1;
+            printf("\n--- Dados da Empresa ---\n");
+            printf("Nome do Respons√°vel: %s\n", empresas[i].nome_responsavel);
+            printf("Nome da Empresa: %s\n", empresas[i].nome_empresa);
+            printf("CNPJ: %s\n", empresas[i].cnpj);
+            printf("Raz√£o Social: %s\n", empresas[i].razao_social);
+            printf("Nome Fantasia: %s\n", empresas[i].nome_fantasia);
+            printf("Data de Abertura: %s\n", empresas[i].data_abertura);
+            printf("Endere√ßo: Rua %s, N√∫mero %s, Bairro %s, Cidade %s, Estado %s, CEP %s\n",
+                   empresas[i].rua, empresas[i].numero, empresas[i].bairro,
+                   empresas[i].cidade, empresas[i].estado, empresas[i].cep);
+            printf("E-mail: %s\n", empresas[i].email);
+            printf("Telefone: %s\n", empresas[i].telefone);
+            printf("------------------------\n");
+            getch();
+            system("cls");
+        }
+    }
+
+    if (encontrou == 0) {
+        printf("Empresa com nome '%s' n√£o encontrada.\n", nome_busca);
+    }
+}
 
 
 int main() {
@@ -102,13 +146,13 @@ int main() {
     int contador = 0;    
     char user_veri[20];
     char user[] = "Admin";
-    int senha_veri, senha_correta, user_correto, i, a ;
+    int senha_veri, senha_correta, user_correto, i, a = 0 ;
     int senha[] = {12345};
    
     do {
-    	 printf("STARTUP DE SOLU«’ES AMBIENTAIS\n"),
+    	 printf("STARTUP DE SOLU√á√ïES AMBIENTAIS\n"),
     	printf("LOGIN\n");
-        printf("Usu·rio:");
+        printf("Usu√°rio:");
         scanf("%s", user_veri);
         printf("\nSenha:");
         scanf("%d", &senha_veri);
@@ -131,31 +175,33 @@ int main() {
         if (senha_correta == 1 && user_correto == 1) {
             printf("Login bem-sucedido!\n");
         } else {
-            printf("Senha ou Usu·rio incorretos!\n");
+            printf("Senha ou Usu√°rio incorretos!\n");
         }
         getch();
 	 system("cls");
     } while (user_correto == 0 || senha_correta == 0);
 
+
+	while(a !=5){
 	do{
     printf("Tela Inicial\n");
-    printf("1.Ver dados das ind˙strias cadastradas\n");
-    printf("2.Cadastrar uma nova ind˙stria\n");
-    printf("3.Atualizar dados mensais de resÌduos\n");
-    printf("4.Gerar relatÛrios\n");
+    printf("1.Ver dados das ind√∫strias cadastradas\n");
+    printf("2.Cadastrar uma nova ind√∫stria\n");
+    printf("3.Atualizar dados mensais de res√≠duos\n");
+    printf("4.Gerar relat√≥rios\n");
     printf("5.Sair\n");
     scanf("%d", &a);
-    if (a<=0 || a>=5){
-    	printf("OpÁ„o inv·lida");
+    if (a<0 || a>5){
+    	printf("Op√ß√£o inv√°lida");
 	} else{
-		printf("OpÁ„o %d selecionada", a);
+		printf("Op√ß√£o %d selecionada", a);
 	}
 	getch();
     system("cls");
-} while(a<=0 || a>=5);
+} while(a<0 || a>5);
     switch(a){
     	case 1:
-    		printf("macarena");
+    		procurar_empresa(empresas, contador);
     		break;
     	case 2:	
     	cadastrar_industria(empresas, &contador);
@@ -170,6 +216,6 @@ int main() {
     		printf("muchas gracias");
     		break;
 	}
-    
+}
     return 0;
 }
