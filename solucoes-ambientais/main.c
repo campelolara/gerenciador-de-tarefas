@@ -23,7 +23,7 @@ typedef struct{
 //corpo principal
 int main(){
     setlocale(LC_ALL, "Portuguese");
-    int escolha = 1;
+    int escolha;
 
     //tela inicial (após cadastro)
     printf("--------------------------------------\n");
@@ -35,11 +35,13 @@ int main(){
     printf("4. Gerar relatórios\n");
     printf("5. Sair\n");
 
-    while(escolha){
-        printf("Escolha uma opção: ");
-        int opcao;
-        scanf("%d", &opcao);
+    printf("Escolha uma opção: ");
+    int opcao;
+    scanf("%d", &opcao);
+    system("cls");
 
+
+    while(escolha >= 0 || escolha <=5){
         switch(opcao){
             case 1:
                 //ver dados das indústrias
