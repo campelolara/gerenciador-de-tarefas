@@ -230,27 +230,26 @@ int main(){
         }
         system("cls");
 
-        while(a >= 1 || a <=5){
-            switch(a){
-                case 1:
-                    procurar_empresa(empresas, contador);
-                    break;
-                case 2:
-                    cadastrar_industria(empresas, &contador);
-                    break;
-                case 3:
-                    //atualizar dados mensais de resíduos
-                    break;
-                case 4:
-                    //gerar relatorios
-                    break;
-                case 5:
-
-                    break;
-                default:
-                    printf("opção inválida. Tente novamente.");
-                    getchar();
-            }
+        switch(a){
+            case 1:
+                procurar_empresa(empresas, contador);
+                break;
+            case 2:
+                cadastrar_industria(empresas, &contador);
+                break;
+            case 3:
+                //atualizar dados mensais de resíduos
+                break;
+            case 4:
+                //gerar relatorios
+                break;
+            case 5:
+                printf("Saindo...");
+                return 0;
+                break;
+            default:
+                printf("Opção inválida. Tente novamente.");
+                break;
         }
     } while(a != 5);
 
