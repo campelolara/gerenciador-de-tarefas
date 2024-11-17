@@ -2,15 +2,17 @@
 #include <stdlib.h>
 #include <locale.h>
 #include <string.h>
+#include <conio.h>
 
 //registro das industrias
 typedef struct{
-    char nome[151];
+    char nome_responsavel[151];
     char cpf[15];
     char rg[20];
-    char nomeEmpresa[50];
+    char nome_empresa[50];
     char cnpj[19];
-    char dataAbertura[11];
+    char nome_fantasia[50];
+    char data_abertura[11];
     char rua[101];
     char numero[11];
     char bairro[51];
@@ -21,44 +23,237 @@ typedef struct{
     char telefone[16];
 }industria;
 
-//corpo principal
-int main(){
-    setlocale(LC_ALL, "Portuguese");
-    int escolha;
+//cadastrar industria
+void cadastrar_industria(industria empresas[], int*contador){
+    if (*contador >= 100) {
+        printf("Limite de cadastro atingido.\n");
+        return;
+    }
 
-    //tela inicial (após cadastro)
     printf("--------------------------------------\n");
-    printf("             TELA INICIAL               \n");
+    printf("          CADASTRO INDÚSTRIA          \n");
     printf("--------------------------------------\n");
-    printf("1. Ver dados das indústrias\n");
-    printf("2. Cadastrar uma nova indústria\n");
-    printf("3. Atualizar dados mensais de resíduos\n");
-    printf("4. Gerar relatórios\n");
-    printf("5. Sair\n");
+    printf("--RESPONSÁVEL--\n");
+    printf("Nome: ");
+    getchar();
+    fgets(empresas[*contador].nome_responsavel, sizeof(empresas[*contador].nome_responsavel), stdin);
+    empresas[*contador].nome_responsavel[strcspn(empresas[*contador].nome_responsavel, "\n")] = 0;
 
-    printf("Escolha uma opção: ");
-    scanf("%d", &escolha);
+    printf("CPF: ");
+    fgets(empresas[*contador].cpf, sizeof(empresas[*contador].cpf), stdin);
+    empresas[*contador].cpf[strcspn(empresas[*contador].cpf, "\n")] = 0;
+
+    printf("RG: ");
+    getchar();
+    fgets(empresas[*contador].rg, sizeof(empresas[*contador].rg), stdin);
+    empresas[*contador].rg[strcspn(empresas[*contador].rg, "\n")] = 0;
+
+    printf("\n--DADOS DA EMPRESA--\n");
+    printf("Nome da Empresa/Razão Social: ");
+    fgets(empresas[*contador].nome_empresa, sizeof(empresas[*contador].nome_empresa), stdin);
+    empresas[*contador].nome_empresa[strcspn(empresas[*contador].nome_empresa, "\n")] = 0;
+
+    printf("CNPJ: ");
+    fgets(empresas[*contador].cnpj, sizeof(empresas[*contador].cnpj), stdin);
+    empresas[*contador].cnpj[strcspn(empresas[*contador].cnpj, "\n")] = 0;
+
+    printf("Nome Fantasia: ");
+    getchar();
+    fgets(empresas[*contador].nome_fantasia, sizeof(empresas[*contador].nome_fantasia), stdin);
+    empresas[*contador].nome_fantasia[strcspn(empresas[*contador].nome_fantasia, "\n")] = 0;
+
+    printf("Data de abertura: ");
+    getchar();
+    fgets(empresas[*contador].data_abertura, sizeof(empresas[*contador].data_abertura), stdin);
+    empresas[*contador].data_abertura[strcspn(empresas[*contador].data_abertura, "\n")] = 0;
+
+    printf("\n--ENDEREÇO--\n");
+    printf("Rua: ");
+    fgets(empresas[*contador].rua, sizeof(empresas[*contador].rua), stdin);
+    empresas[*contador].rua[strcspn(empresas[*contador].rua, "\n")] = 0;
+
+    printf("Número: ");
+    fgets(empresas[*contador].numero, sizeof(empresas[*contador].numero), stdin);
+    empresas[*contador].numero[strcspn(empresas[*contador].numero, "\n")] = 0;
+
+    printf("Bairro: ");
+    fgets(empresas[*contador].bairro, sizeof(empresas[*contador].bairro), stdin);
+    empresas[*contador].bairro[strcspn(empresas[*contador].bairro, "\n")] = 0;
+
+    printf("Cidade: ");
+    fgets(empresas[*contador].cidade, sizeof(empresas[*contador].cidade), stdin);
+    empresas[*contador].cidade[strcspn(empresas[*contador].cidade, "\n")] = 0;
+
+    printf("Estado: ");
+    fgets(empresas[*contador].estado, sizeof(empresas[*contador].estado), stdin);
+    empresas[*contador].estado[strcspn(empresas[*contador].estado, "\n")] = 0;
+
+    printf("CEP: ");
+    getchar();
+    fgets(empresas[*contador].cep, sizeof(empresas[*contador].cep), stdin);
+    empresas[*contador].cep[strcspn(empresas[*contador].cep, "\n")] = 0;
+
+    printf("\n--CONTATO--\n");
+    printf("E-mail: ");
+    getchar();
+    fgets(empresas[*contador].email, sizeof(empresas[*contador].email), stdin);
+    empresas[*contador].email[strcspn(empresas[*contador].email, "\n")] = 0;
+
+    printf("Telefone: ");
+    fgets(empresas[*contador].telefone, sizeof(empresas[*contador].telefone), stdin);
+    empresas[*contador].telefone[strcspn(empresas[*contador].telefone, "\n")] = 0;
+
+    printf("Indústria cadastrada com sucesso!\n");
+    getch();
     system("cls");
+    (*contador)++;
+}
 
+//procurar dados da industria
+void procurar_empresa(industria empresas[], int contador){
+ 	if (contador == 0) {
+        printf("Nenhuma empresa cadastrada.\n");
+        getch();
+        system("cls");
+        return;
+    }
+	char nome_busca[50];
+    printf("Digite o nome da empresa que deseja buscar: ");
+    getchar();
+    fgets(nome_busca, sizeof(nome_busca), stdin);
+    nome_busca[strcspn(nome_busca, "\n")] = 0;
 
-    while(escolha >= 0 || escolha <=5){
-        switch(escolha){
-            case 1:
-                //ver dados das indústrias
-                break;
-            case 2:
-                //cadastrar uma nova indústria
-                break;
-            case 3:
-                //atualizar dados mensais de resíduos
-                break;
-            case 4:
-                //gerar relatórios
-                break;
-            case 5:
-                //sair
-                break;
+    int i, encontrou = 0;
+    for ( i = 0; i < contador; i++) {
+        if (strcmp(empresas[i].nome_empresa, nome_busca) == 0) {
+            encontrou = 1;
+
+            printf("--------------------------------------\n");
+            printf("           DADOS DA INDUSTRIA:        \n");
+            printf("                   %s                 \n", empresas[i].nome_empresa);
+            printf("--------------------------------------\n");
+            printf("--RESPONSÁVEL--");
+            printf("Nome do Responsável: %s\n", empresas[i].nome_responsavel);
+            printf("CPF: %s\n", empresas[i].cpf);
+            printf("RG: %s\n", empresas[i].rg);
+
+            printf("--DADOS DA EMPRESA--");
+            printf("Nome da Empresa/Razão Social: %s\n", empresas[i].nome_empresa);
+            printf("CNPJ: %s\n", empresas[i].cnpj);
+            printf("Nome Fantasia: %s\n", empresas[i].nome_fantasia);
+            printf("Data de Abertura: %s\n", empresas[i].data_abertura);
+
+            printf("--ENDEREÇO--");
+            printf("Endereço: Rua %s, Número %s, Bairro %s, Cidade %s, Estado %s, CEP %s\n",
+                   empresas[i].rua, empresas[i].numero, empresas[i].bairro,
+                   empresas[i].cidade, empresas[i].estado, empresas[i].cep);
+
+            printf("--CONTATO--");
+            printf("E-mail: %s\n", empresas[i].email);
+            printf("Telefone: %s\n", empresas[i].telefone);
+            printf("--------------------------------------\n");
+            getch();
+            system("cls");
         }
     }
+    if (encontrou == 0) {
+        printf("Empresa com nome '%s' não encontrada.\n", nome_busca);
+    }
+}
+
+
+
+//corpo principal
+int main(){
+    setlocale(LC_ALL, "portuguese");
+    industria empresas[100];
+    int contador = 0;
+    char user_veri[20];
+    char user[] = "Admin";
+    int senha_veri, senha_correta, user_correto, i, a;
+    int senha[] = {12345};
+
+    //login
+    do{
+        printf("--------------------------------------\n");
+        printf("                 NOME                 \n");
+        printf("    STARTUP DE SOLUÇÕES AMBIENTAIS    \n");
+        printf("--------------------------------------\n");
+        printf("                LOGIN                 \n");
+        printf("Usuário: ");
+        scanf("%s", user_veri);
+        printf("\nSenha: ");
+        scanf("%d", &senha_veri);
+
+        user_correto = 0;
+        senha_correta = 0;
+
+        if (strcmp(user_veri, user) == 0) {
+            user_correto = 1;
+        } else {
+            user_correto = 0;
+        }
+
+        if (senha_veri == senha[0]) {
+            senha_correta = 1;
+        } else {
+            senha_correta = 0;
+        }
+
+        if (senha_correta == 1 && user_correto == 1) {
+            printf("Login bem-sucedido!\n");
+            printf("\nPressione 'enter' para entrar no sistema");
+        } else {
+            printf("Senha ou Usuário incorretos!\n");
+        }
+        getch();
+	    system("cls");
+    } while (user_correto == 0 || senha_correta == 0);
+
+    //telainicial
+    do{
+        printf("--------------------------------------\n");
+        printf("             TELA INICIAL               \n");
+        printf("--------------------------------------\n");
+        printf("1. Ver dados das indústrias\n");
+        printf("2. Cadastrar uma nova indústria\n");
+        printf("3. Atualizar dados mensais de resíduos\n");
+        printf("4. Gerar relatórios\n");
+        printf("5. Sair\n");
+        printf("Selecione uma opção: ");
+        scanf("%d", &a);
+
+        if(a < 1 || a > 5){
+            printf("Opção inválida");
+            getchar();
+            system("cls");
+        }
+        system("cls");
+
+        while(a >= 1 || a <=5){
+            switch(a){
+                case 1:
+                    procurar_empresa(empresas, contador);
+                    break;
+                case 2:
+                    cadastrar_industria(empresas, &contador);
+                    break;
+                case 3:
+                    //atualizar dados mensais de resíduos
+                    break;
+                case 4:
+                    //gerar relatorios
+                    break;
+                case 5:
+
+                    break;
+                default:
+                    printf("opção inválida. Tente novamente.");
+                    getchar();
+            }
+        }
+    } while(a != 5);
+
+
     return 0;
 }
