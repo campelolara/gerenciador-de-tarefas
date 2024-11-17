@@ -4,6 +4,14 @@
 #include <string.h>
 #include <conio.h>
 
+//atualizações mensais
+typedef struct{
+    int ano;
+    int mes;
+    float residuos_mensal;
+    float custo_mensal;
+}dados_mensais;
+
 //registro das industrias
 typedef struct{
     char nome_responsavel[151];
@@ -21,7 +29,12 @@ typedef struct{
     char cep[10];
     char email[101];
     char telefone[16];
+
+    dados_mensais residuos_mensais[12]; //atualizações mensais por empresa
+    int total_atualizacoes;
 }industria;
+
+
 
 //cadastrar industria
 void cadastrar_industria(industria empresas[], int*contador){
@@ -58,7 +71,6 @@ void cadastrar_industria(industria empresas[], int*contador){
     empresas[*contador].cnpj[strcspn(empresas[*contador].cnpj, "\n")] = 0;
 
     printf("Nome Fantasia: ");
-    getchar();
     fgets(empresas[*contador].nome_fantasia, sizeof(empresas[*contador].nome_fantasia), stdin);
     empresas[*contador].nome_fantasia[strcspn(empresas[*contador].nome_fantasia, "\n")] = 0;
 
@@ -95,7 +107,6 @@ void cadastrar_industria(industria empresas[], int*contador){
 
     printf("\n--CONTATO--\n");
     printf("E-mail: ");
-    getchar();
     fgets(empresas[*contador].email, sizeof(empresas[*contador].email), stdin);
     empresas[*contador].email[strcspn(empresas[*contador].email, "\n")] = 0;
 
@@ -109,17 +120,31 @@ void cadastrar_industria(industria empresas[], int*contador){
     (*contador)++;
 }
 
-//procurar dados da industria
-void procurar_empresa(industria empresas[], int contador){
- 	if (contador == 0) {
-        printf("Nenhuma empresa cadastrada.\n");
+//procura
+void procura(industria empresas[], int contador){
+    if (contador == 0) {
+        printf("Nenhuma indústria cadastrada.\n");
         getch();
         system("cls");
         return;
     }
-	char nome_busca[50];
-    printf("Digite o nome da empresa que deseja buscar: ");
+    for (int i = 0; i < contador; i++) {
+        printf("-%s\n", empresas[i].nome_empresa);
+    }
+}
+
+//procurar dados da industria
+void dados_empresa(industria empresas[], int contador){
+ 	printf("--------------------------------------\n");
+    printf("        INDUSTRIAS CADASTRADAS        \n");
+    printf("--------------------------------------\n");
+    printf("            --INDUSTRIAS--            \n");
+    procura(empresas, contador);
+
+    printf("--------------------------------------\n");
+    printf("Digite o nome da indústria que deseja olhar os dados: ");
     getchar();
+	char nome_busca[50];
     fgets(nome_busca, sizeof(nome_busca), stdin);
     nome_busca[strcspn(nome_busca, "\n")] = 0;
 
@@ -128,27 +153,26 @@ void procurar_empresa(industria empresas[], int contador){
         if (strcmp(empresas[i].nome_empresa, nome_busca) == 0) {
             encontrou = 1;
 
+            printf("\n--------------------------------------\n");
+            printf("      DADOS DA INDUSTRIA: %s       \n", empresas[i].nome_empresa);
             printf("--------------------------------------\n");
-            printf("           DADOS DA INDUSTRIA:        \n");
-            printf("                   %s                 \n", empresas[i].nome_empresa);
-            printf("--------------------------------------\n");
-            printf("--RESPONSÁVEL--");
+            printf("--RESPONSÁVEL--\n");
             printf("Nome do Responsável: %s\n", empresas[i].nome_responsavel);
             printf("CPF: %s\n", empresas[i].cpf);
             printf("RG: %s\n", empresas[i].rg);
 
-            printf("--DADOS DA EMPRESA--");
+            printf("\n--DADOS DA EMPRESA--\n");
             printf("Nome da Empresa/Razão Social: %s\n", empresas[i].nome_empresa);
             printf("CNPJ: %s\n", empresas[i].cnpj);
             printf("Nome Fantasia: %s\n", empresas[i].nome_fantasia);
             printf("Data de Abertura: %s\n", empresas[i].data_abertura);
 
-            printf("--ENDEREÇO--");
+            printf("\n--ENDEREÇO--\n");
             printf("Endereço: Rua %s, Número %s, Bairro %s, Cidade %s, Estado %s, CEP %s\n",
                    empresas[i].rua, empresas[i].numero, empresas[i].bairro,
                    empresas[i].cidade, empresas[i].estado, empresas[i].cep);
 
-            printf("--CONTATO--");
+            printf("\n--CONTATO--\n");
             printf("E-mail: %s\n", empresas[i].email);
             printf("Telefone: %s\n", empresas[i].telefone);
             printf("--------------------------------------\n");
@@ -157,11 +181,62 @@ void procurar_empresa(industria empresas[], int contador){
         }
     }
     if (encontrou == 0) {
-        printf("Empresa com nome '%s' não encontrada.\n", nome_busca);
+        printf("Indústria com nome '%s' não encontrada.\n", nome_busca);
     }
 }
 
+//atualizar dados mensais de resíduos
+void atualizar_dados_mensais(industria empresas[], int contador) {
+    printf("--------------------------------------\n");
+    printf("            ATUALIZAR DADOS           \n");
+    printf("          MENSAIS DE RESÍDUOS         \n");
+    printf("--------------------------------------\n");
+    printf("            --INDUSTRIAS--            \n");
+    procura(empresas, contador);
 
+    printf("--------------------------------------\n");
+    printf("Digite o nome da indústria que deseja atualizar : ");
+    getchar();
+	char nome_busca[50];
+    fgets(nome_busca, sizeof(nome_busca), stdin);
+    nome_busca[strcspn(nome_busca, "\n")] = 0;
+
+    int encontrou = 0;
+    for (int i = 0; i < contador; i++) {
+        if (strcmp(empresas[i].nome_empresa, nome_busca) == 0) {
+            encontrou = 1;
+
+            if (empresas->total_atualizacoes >= 12) {
+                printf("Número máximo de relatórios para o ano atingido.\n");
+                return;
+            }
+
+            dados_mensais novo_dado;
+            printf("Digite o mês (1-12): ");
+            scanf("%d", &novo_dado.mes);
+
+            printf("Digite o ano: ");
+            scanf("%d", &novo_dado.ano);
+
+            printf("Digite a quantidade de resíduos tratados (em toneladas): ");
+            scanf("%f", &novo_dado.residuos_mensal);
+
+            printf("Digite o custo estimado: ");
+            scanf("%f", &novo_dado.custo_mensal);
+
+            empresas->residuos_mensais[empresas->total_atualizacoes] = novo_dado;
+            empresas->total_atualizacoes++;
+
+            printf("Relatório adicionado com sucesso.\n");
+            getch();
+            system("cls");
+            return;
+        }
+    }
+    if (encontrou == 0) {
+        printf("Indústria com nome '%s' não encontrada.\n", nome_busca);
+    }
+}
 
 //corpo principal
 int main(){
@@ -232,13 +307,13 @@ int main(){
 
         switch(a){
             case 1:
-                procurar_empresa(empresas, contador);
+                dados_empresa(empresas, contador);
                 break;
             case 2:
                 cadastrar_industria(empresas, &contador);
                 break;
             case 3:
-                //atualizar dados mensais de resíduos
+                atualizar_dados_mensais(empresas, contador);
                 break;
             case 4:
                 //gerar relatorios
@@ -248,7 +323,9 @@ int main(){
                 return 0;
                 break;
             default:
-                printf("Opção inválida. Tente novamente.");
+                printf("Opção inválida. Tente novamente.\n");
+                getchar();
+                system("cls");
                 break;
         }
     } while(a != 5);
