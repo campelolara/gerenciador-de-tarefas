@@ -30,7 +30,8 @@ typedef struct{
     char email[101];
     char telefone[16];
 
-    dados_mensais residuos_mensais; //atualizações mensais por empresa
+    dados_mensais residuos_mensais[12]; //atualizações mensais por empresa
+    int total_meses;
 }industria;
 
 
@@ -210,6 +211,11 @@ void atualizar_dados_mensais(industria empresas[], int contador) {
         if (strcmp(empresas[i].nome_empresa, nome_busca) == 0) {
             encontrou = 1;
 
+            if (empresas[i].total_meses >= 12) {
+                printf("Limite de atualizações do ano completas!.\n");
+                return;
+            }
+
             dados_mensais novo_dado;
             printf("Digite o mês (1-12): ");
             scanf("%d", &novo_dado.mes);
@@ -220,12 +226,14 @@ void atualizar_dados_mensais(industria empresas[], int contador) {
             printf("Digite a quantidade de resíduos tratados (em toneladas): ");
             scanf("%f", &novo_dado.residuos_mensal);
 
-            printf("Digite o custo estimado: ");
+            printf("Digite o custo estimado (R$): ");
             scanf("%f", &novo_dado.custo_mensal);
 
-            empresas->residuos_mensais = novo_dado;
+            empresas->residuos_mensais[i] = novo_dado;
 
-            printf("Relatório adicionado com sucesso.\n");
+            empresas[i].total_meses++;
+
+            printf("Atualização mensal adicionada com sucesso.\n");
             getch();
             system("cls");
             return;
@@ -238,17 +246,55 @@ void atualizar_dados_mensais(industria empresas[], int contador) {
 
 //insumos semestrais
 void insumo_semestral(industria empresas[], int contador){
-    //incompleto
+    printf("--------------------------------------\n");
+    printf("          RELATÓRIO INDIVIDUAL        \n");
+    printf("--------------------------------------\n");
+    printf("            --INDUSTRIAS--            \n");
+    procura(empresas, contador);
+	if (contador == 0){
+		return;
+	}
+    printf("--------------------------------------\n");
+    printf("Digite o nome da indústria que deseja gerar um relatório: ");
+    getchar();
+	char nome_busca[50];
+    fgets(nome_busca, sizeof(nome_busca), stdin);
+    nome_busca[strcspn(nome_busca, "\n")] = 0;
+
+    int i, encontrou = 0;
+    for (i = 0; i < contador; i++) {
+        if (strcmp(empresas[i].nome_empresa, nome_busca) == 0) {
+            encontrou = 1;
+
+            //
+            //
+            
+            getch();
+            system("cls");
+            return;
+        }
+    }
+    if (encontrou == 0) {
+        printf("Indústria com nome '%s' não encontrada.\n", nome_busca);
+    }
+
 }
 
 //gerar relatorios
-void gerar_relatorios(industria empresas[]){
+void gerar_relatorios(industria empresas[], int contador){
     int opcao;
 
     do{
+
         printf("--------------------------------------\n");
         printf("            GERAR RELATÓRIOS          \n");
         printf("--------------------------------------\n");
+        if (contador == 0) {
+        printf("Nenhuma indústria cadastrada.\n");
+        getch();
+        system("cls");
+        return;
+        }
         printf("1. Relatório Individual\n");
         printf("2. Relatório Global\n");
         printf("3. Sair\n");
@@ -265,7 +311,7 @@ void gerar_relatorios(industria empresas[]){
 
         switch(opcao){
             case 1:
-                printf("Individual"); //criar função
+                insumo_semestral(empresas, contador);
                 getch();
                 system("cls");
                 break;
@@ -368,7 +414,7 @@ int main(){
                 atualizar_dados_mensais(empresas, contador);
                 break;
             case 4:
-                gerar_relatorios(empresas);
+                gerar_relatorios(empresas, contador);
                 break;
             case 5:
                 printf("Saindo...");
