@@ -30,8 +30,7 @@ typedef struct{
     char email[101];
     char telefone[16];
 
-    dados_mensais residuos_mensais[12]; //atualizações mensais por empresa
-    int total_atualizacoes;
+    dados_mensais residuos_mensais; //atualizações mensais por empresa
 }industria;
 
 
@@ -206,11 +205,6 @@ void atualizar_dados_mensais(industria empresas[], int contador) {
         if (strcmp(empresas[i].nome_empresa, nome_busca) == 0) {
             encontrou = 1;
 
-            if (empresas->total_atualizacoes >= 12) {
-                printf("Número máximo de relatórios para o ano atingido.\n");
-                return;
-            }
-
             dados_mensais novo_dado;
             printf("Digite o mês (1-12): ");
             scanf("%d", &novo_dado.mes);
@@ -224,8 +218,7 @@ void atualizar_dados_mensais(industria empresas[], int contador) {
             printf("Digite o custo estimado: ");
             scanf("%f", &novo_dado.custo_mensal);
 
-            empresas->residuos_mensais[empresas->total_atualizacoes] = novo_dado;
-            empresas->total_atualizacoes++;
+            empresas->residuos_mensais = novo_dado;
 
             printf("Relatório adicionado com sucesso.\n");
             getch();
@@ -236,6 +229,60 @@ void atualizar_dados_mensais(industria empresas[], int contador) {
     if (encontrou == 0) {
         printf("Indústria com nome '%s' não encontrada.\n", nome_busca);
     }
+}
+
+//insumos semestrais
+void insumo_semestral(industria empresas[], int contador){
+    //incompleto
+}
+
+//gerar relatorios
+void gerar_relatorios(industria empresas[]){
+    int opcao;
+
+    do{
+        printf("--------------------------------------\n");
+        printf("            GERAR RELATÓRIOS          \n");
+        printf("--------------------------------------\n");
+        printf("1. Relatório Individual\n");
+        printf("2. Relatório Global\n");
+        printf("3. Sair\n");
+        printf("Selecione uma opção: ");
+        scanf("%d", &opcao);
+
+
+        if(opcao < 1 || opcao > 3){
+            printf("Opção inválida");
+            getchar();
+            system("cls");
+        }
+        system("cls");
+
+        switch(opcao){
+            case 1:
+                printf("Individual"); //criar função
+                getch();
+                system("cls");
+                break;
+            case 2:
+                printf("Global"); //criar função
+                getch();
+                system("cls");
+                break;
+            case 3:
+                printf("Saindo...");
+                getch();
+                system("cls");
+                return;
+                break;
+            default:
+                printf("Opção inválida. Tente novamente.\n");
+                getchar();
+                system("cls");
+                break;
+        }
+    } while(opcao != 3);
+
 }
 
 //corpo principal
@@ -316,7 +363,7 @@ int main(){
                 atualizar_dados_mensais(empresas, contador);
                 break;
             case 4:
-                //gerar relatorios
+                gerar_relatorios(empresas);
                 break;
             case 5:
                 printf("Saindo...");
