@@ -127,7 +127,8 @@ void procura(industria empresas[], int contador){
         system("cls");
         return;
     }
-    for (int i = 0; i < contador; i++) {
+    int i;
+    for ( i = 0; i < contador; i++) {
         printf("-%s\n", empresas[i].nome_empresa);
     }
 }
@@ -139,7 +140,9 @@ void dados_empresa(industria empresas[], int contador){
     printf("--------------------------------------\n");
     printf("            --INDUSTRIAS--            \n");
     procura(empresas, contador);
-
+	if (contador == 0){
+		return;
+	}
     printf("--------------------------------------\n");
     printf("Digite o nome da indústria que deseja olhar os dados: ");
     getchar();
@@ -192,7 +195,9 @@ void atualizar_dados_mensais(industria empresas[], int contador) {
     printf("--------------------------------------\n");
     printf("            --INDUSTRIAS--            \n");
     procura(empresas, contador);
-
+	if (contador == 0){
+		return;
+	}
     printf("--------------------------------------\n");
     printf("Digite o nome da indústria que deseja atualizar : ");
     getchar();
@@ -200,8 +205,8 @@ void atualizar_dados_mensais(industria empresas[], int contador) {
     fgets(nome_busca, sizeof(nome_busca), stdin);
     nome_busca[strcspn(nome_busca, "\n")] = 0;
 
-    int encontrou = 0;
-    for (int i = 0; i < contador; i++) {
+    int i, encontrou = 0;
+    for (i = 0; i < contador; i++) {
         if (strcmp(empresas[i].nome_empresa, nome_busca) == 0) {
             encontrou = 1;
 
