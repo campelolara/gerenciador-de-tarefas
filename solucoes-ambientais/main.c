@@ -45,7 +45,7 @@ void criptografar_dados(void *dados, size_t tamanho, const char *chave) {
     }
 }
 
-//CARREGAR OS DADOS SALVOS 
+//CARREGAR OS DADOS SALVOS
 void carregar_dados(industria empresas[], int *contador) {
     const char *chave = "chave-secreta";  // Chave de criptografia simples
     FILE *arquivo = fopen("industria_dados.bin", "rb");
@@ -56,15 +56,15 @@ void carregar_dados(industria empresas[], int *contador) {
     }
     fread(contador, sizeof(int), 1, arquivo);
     fread(empresas, sizeof(industria), *contador, arquivo);
-    // DESCRIPTOGRAFA OS DADOS 
+    // DESCRIPTOGRAFA OS DADOS
     criptografar_dados(empresas, sizeof(industria) * (*contador), chave);
     fclose(arquivo);
     printf("Dados carregados com sucesso!\n");
 }
 
-//SALVAR OS DADOS 
+//SALVAR OS DADOS
 void salvar_dados(industria empresas[], int contador) {
-    const char *chave = "chave-secreta";  // CHAVE DA CRIPTOGRAFIA	
+    const char *chave = "chave-secreta";  // CHAVE DA CRIPTOGRAFIA
     FILE *arquivo = fopen("industria_dados.bin", "wb");
     if (arquivo == NULL) {
         printf("Erro ao abrir o arquivo para salvar.\n");
@@ -117,6 +117,7 @@ void cadastrar_industria(industria empresas[], int*contador){
     empresas[*contador].cnpj[strcspn(empresas[*contador].cnpj, "\n")] = 0;
 
     printf("Nome Fantasia: ");
+    getchar();
     fgets(empresas[*contador].nome_fantasia, sizeof(empresas[*contador].nome_fantasia), stdin);
     empresas[*contador].nome_fantasia[strcspn(empresas[*contador].nome_fantasia, "\n")] = 0;
 
@@ -153,10 +154,11 @@ void cadastrar_industria(industria empresas[], int*contador){
 
     printf("\n--CONTATO--\n");
     printf("E-mail: ");
+    getchar();
     fgets(empresas[*contador].email, sizeof(empresas[*contador].email), stdin);
     empresas[*contador].email[strcspn(empresas[*contador].email, "\n")] = 0;
 
-    printf("Telefone: ");
+    printf("\nTelefone: ");
     fgets(empresas[*contador].telefone, sizeof(empresas[*contador].telefone), stdin);
     empresas[*contador].telefone[strcspn(empresas[*contador].telefone, "\n")] = 0;
 
@@ -267,8 +269,6 @@ void atualizar_dados_mensais(industria empresas[], int contador) {
             printf("Digite o custo estimado (R$): ");
             scanf("%f", &empresas[i].residuos_mensais[mes - 1].custo_mensal[mes - 1]);
 
-
-
             printf("Atualização mensal adicionada com sucesso.\n");
             getch();
             system("cls");
@@ -330,23 +330,45 @@ void relatorio_global(industria empresas[], int contador){
     printf("--------------------------------------\n");
     printf("           RELATÓRIO GLOBAL           \n");
     printf("--------------------------------------\n");
-    
+
+    if (contador == 0) {
+        printf("Nenhuma indústria cadastrada.\n");
+        return;
+    }
+	//falta testar
+
+    float maior_residuos, menor_residuos;
+    char industria_maior[50], industria_menor[50];
+
+    for (int i = 0; i < contador; i++) {
+        float total_residuos = 0;
+        for (int mes = 0; mes < 6; mes++) {
+            total_residuos += empresas[i].residuos_mensais[mes].residuos_mensal[mes];
+        }
+
+        if (total_residuos > maior_residuos) {
+            maior_residuos = total_residuos;
+            strcpy(industria_maior, empresas[i].nome_empresa);
+        }
+        if (total_residuos < menor_residuos) {
+            menor_residuos = total_residuos;
+            strcpy(industria_menor, empresas[i].nome_empresa);
+        }
+    }
+
     //
     //
-    //
-    
-    printf("Indústrias que MAIS produziram no último semestre: \n");
-    printf("Indústrias que MENOS produziram no último semestre: \n");
+
+    printf("Indústrias que MAIS trataram resíduos no último semestre: %s (%.2f toneladas)\n", industria_maior, maior_residuos);
+    printf("Indústrias que MENOS trataram resíduos no último semestre: %s (%.2f toneladas)\n", industria_menor, menor_residuos);
     printf("Indústria com MAIOR aporte financeiro semestral: \n");
     printf("Indústria com MENOR aporte financeiro semestral: \n");
     printf("Região onde estão localizadas as indústrias que tratam um maior volume de resíduos industriais: \n");
-	
+
 	getch();
     system("cls");
     return;
 }
-
-
 
 //FUNÇÃO DE INICIALIZAÇÃO DE GERAR RELATÓRIOS
 void gerar_relatorios(industria empresas[], int contador){
@@ -406,7 +428,7 @@ void gerar_relatorios(industria empresas[], int contador){
 
 //PROGRAMA PRINCIPAL
 int main(){
-    setlocale(LC_ALL, "portuguese");
+    setlocale(LC_ALL, "Portuguese");
     industria empresas[100];
     int contador = 0;
     char user_veri[20];
