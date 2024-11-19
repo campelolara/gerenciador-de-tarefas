@@ -34,7 +34,36 @@ typedef struct{
     int total_meses;
 }industria;
 
+//FUNÇÃO SALVAR OS DADOS 
+void salvar_dados(industria empresas[], int contador) {
+    FILE *arquivo = fopen("industria_dados.bin", "wb");
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo para salvar.\n");
+        return;
+    }
 
+    fwrite(&contador, sizeof(int), 1, arquivo);
+    fwrite(empresas, sizeof(industria), contador, arquivo); 
+
+    fclose(arquivo);
+    printf("Dados salvos com sucesso!\n");
+}
+
+//FUNÇÃO CARREGAR DADOS
+void carregar_dados(industria empresas[], int *contador) {
+    FILE *arquivo = fopen("industria_dados.bin", "rb");
+    if (arquivo == NULL) {
+        printf("Nenhum dado salvo encontrado. Iniciando com dados vazios.\n");
+        *contador = 0;
+        return;
+    }
+
+    fread(contador, sizeof(int), 1, arquivo); 
+    fread(empresas, sizeof(industria), *contador, arquivo); 
+
+    fclose(arquivo);
+    printf("Dados carregados com sucesso!\n");
+}
 
 //FUNÇÃO DE CADASTRAR UMA INDÚSTRIA
 void cadastrar_industria(industria empresas[], int*contador){
@@ -258,7 +287,8 @@ void insumo_semestral(industria empresas[], int contador){
 
             // Cálculo de resíduos e custos totais
             float total_residuos = 0.0, total_custos = 0.0;
-            for (int mes = 0; mes < 6; mes++) {
+            int mes;
+            for ( mes = 0; mes < 6; mes++) {
                 total_residuos += empresas[i].residuos_mensais[mes].residuos_mensal[mes];
                 total_custos += empresas[i].residuos_mensais[mes].custo_mensal[mes];
             }
@@ -366,6 +396,7 @@ int main(){
     char user[] = "Admin";
     int senha_veri, senha_correta, user_correto, i, a;
     int senha[] = {12345};
+    carregar_dados(empresas, &contador);
 
     //LOGIN
     do{
@@ -438,6 +469,7 @@ int main(){
                 gerar_relatorios(empresas, contador);
                 break;
             case 5:
+            	salvar_dados(empresas, contador);
                 printf("Saindo...");
                 return 0;
                 break;
