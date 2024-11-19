@@ -1,18 +1,18 @@
+//BIBLIOTECAS
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
 #include <string.h>
 #include <conio.h>
 
-//atualizações mensais
+//REGISTROS
 typedef struct{
     int ano;
     int mes;
-    float residuos_mensal;
-    float custo_mensal;
+    float residuos_mensal[6];
+    float custo_mensal[6];
 }dados_mensais;
 
-//registro das industrias
 typedef struct{
     char nome_responsavel[151];
     char cpf[15];
@@ -30,13 +30,13 @@ typedef struct{
     char email[101];
     char telefone[16];
 
-    dados_mensais residuos_mensais[12]; //atualizações mensais por empresa
+    dados_mensais residuos_mensais[6]; //atualizações mensais por empresa
     int total_meses;
 }industria;
 
 
 
-//cadastrar industria
+//FUNÇÃO DE CADASTRAR UMA INDÚSTRIA
 void cadastrar_industria(industria empresas[], int*contador){
     if (*contador >= 100) {
         printf("Limite de cadastro atingido.\n");
@@ -120,7 +120,7 @@ void cadastrar_industria(industria empresas[], int*contador){
     (*contador)++;
 }
 
-//procura
+//FUNÇÃO DE PROCURAR UMA INDÚSTRIA
 void procura(industria empresas[], int contador){
     if (contador == 0) {
         printf("Nenhuma indústria cadastrada.\n");
@@ -134,7 +134,7 @@ void procura(industria empresas[], int contador){
     }
 }
 
-//procurar dados da industria
+//FUNÇÃO INCREMENTAL DE VERIFICAÇÃO DE DADOS DA INDUSTRIA
 void dados_empresa(industria empresas[], int contador){
  	printf("--------------------------------------\n");
     printf("        INDUSTRIAS CADASTRADAS        \n");
@@ -145,7 +145,7 @@ void dados_empresa(industria empresas[], int contador){
 		return;
 	}
     printf("--------------------------------------\n");
-    printf("Digite o nome da indústria que deseja olhar os dados: ");
+    printf("Digite o nome da indústria que deseja verificar os dados: ");
     getchar();
 	char nome_busca[50];
     fgets(nome_busca, sizeof(nome_busca), stdin);
@@ -188,7 +188,7 @@ void dados_empresa(industria empresas[], int contador){
     }
 }
 
-//atualizar dados mensais de resíduos
+//FUNÇÃO DE ATUALIZAÇÕES MENSAIS
 void atualizar_dados_mensais(industria empresas[], int contador) {
     printf("--------------------------------------\n");
     printf("            ATUALIZAR DADOS           \n");
@@ -211,27 +211,17 @@ void atualizar_dados_mensais(industria empresas[], int contador) {
         if (strcmp(empresas[i].nome_empresa, nome_busca) == 0) {
             encontrou = 1;
 
-            if (empresas[i].total_meses >= 12) {
-                printf("Limite de atualizações do ano completas!.\n");
-                return;
-            }
-
-            dados_mensais novo_dado;
+            int mes;
             printf("Digite o mês (1-12): ");
-            scanf("%d", &novo_dado.mes);
-
-            printf("Digite o ano: ");
-            scanf("%d", &novo_dado.ano);
+            scanf("%d", &mes);
 
             printf("Digite a quantidade de resíduos tratados (em toneladas): ");
-            scanf("%f", &novo_dado.residuos_mensal);
+            scanf("%f", &empresas[i].residuos_mensais[mes - 1].residuos_mensal[mes - 1]);
 
             printf("Digite o custo estimado (R$): ");
-            scanf("%f", &novo_dado.custo_mensal);
+            scanf("%f", &empresas[i].residuos_mensais[mes - 1].custo_mensal[mes - 1]);
 
-            empresas->residuos_mensais[i] = novo_dado;
 
-            empresas[i].total_meses++;
 
             printf("Atualização mensal adicionada com sucesso.\n");
             getch();
@@ -244,7 +234,7 @@ void atualizar_dados_mensais(industria empresas[], int contador) {
     }
 }
 
-//insumos semestrais
+//FUNÇÃO DE GERAR RELATÓRIO SEMESTRAL
 void insumo_semestral(industria empresas[], int contador){
     printf("--------------------------------------\n");
     printf("          RELATÓRIO INDIVIDUAL        \n");
@@ -266,9 +256,17 @@ void insumo_semestral(industria empresas[], int contador){
         if (strcmp(empresas[i].nome_empresa, nome_busca) == 0) {
             encontrou = 1;
 
-            //
-            //
-            
+            // Cálculo de resíduos e custos totais
+            float total_residuos = 0.0, total_custos = 0.0;
+            for (int mes = 0; mes < 6; mes++) {
+                total_residuos += empresas[i].residuos_mensais[mes].residuos_mensal[mes];
+                total_custos += empresas[i].residuos_mensais[mes].custo_mensal[mes];
+            }
+
+            printf("\n--------------------------------------\n");
+            printf("Relatório Semestral da Indústria: %s\n", empresas[i].nome_empresa);
+            printf("Total de insumos tratados semestralmente: %.2f\n", total_residuos);
+            printf("Total de gastos semestrais: R$ %.2f\n", total_custos);
             getch();
             system("cls");
             return;
@@ -280,7 +278,30 @@ void insumo_semestral(industria empresas[], int contador){
 
 }
 
-//gerar relatorios
+//FUNÇÃO DE GERAR RELATÓRIO GLOBAL
+void relatorio_global(industria empresas[], int contador){
+    printf("--------------------------------------\n");
+    printf("           RELATÓRIO GLOBAL           \n");
+    printf("--------------------------------------\n");
+    
+    //
+    //
+    //
+    
+    printf("Indústrias que MAIS produziram no último semestre: \n");
+    printf("Indústrias que MENOS produziram no último semestre: \n");
+    printf("Indústria com MAIOR aporte financeiro semestral: \n");
+    printf("Indústria com MENOR aporte financeiro semestral: \n");
+    printf("Região onde estão localizadas as indústrias que tratam um maior volume de resíduos industriais: \n");
+	
+	getch();
+    system("cls");
+    return;
+}
+
+
+
+//FUNÇÃO DE INICIALIZAÇÃO DE GERAR RELATÓRIOS
 void gerar_relatorios(industria empresas[], int contador){
     int opcao;
 
@@ -336,7 +357,7 @@ void gerar_relatorios(industria empresas[], int contador){
 
 }
 
-//corpo principal
+//PROGRAMA PRINCIPAL
 int main(){
     setlocale(LC_ALL, "portuguese");
     industria empresas[100];
@@ -346,7 +367,7 @@ int main(){
     int senha_veri, senha_correta, user_correto, i, a;
     int senha[] = {12345};
 
-    //login
+    //LOGIN
     do{
         printf("--------------------------------------\n");
         printf("                 NOME                 \n");
@@ -383,7 +404,7 @@ int main(){
 	    system("cls");
     } while (user_correto == 0 || senha_correta == 0);
 
-    //telainicial
+    //TELA INICIAL
     do{
         printf("--------------------------------------\n");
         printf("             TELA INICIAL               \n");
