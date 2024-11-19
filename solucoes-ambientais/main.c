@@ -34,35 +34,52 @@ typedef struct{
     int total_meses;
 }industria;
 
-//FUNÇÃO SALVAR OS DADOS 
+//CRIPTOGRAFIA
+void criptografar_dados(void *dados, size_t tamanho, const char *chave) {
+    size_t chave_len = strlen(chave);
+    size_t i;
+    unsigned char *dados_char = (unsigned char *)dados;
+
+    for (i = 0; i < tamanho; i++) {
+        dados_char[i] ^= chave[i % chave_len];  // XOR com a chave, byte a byte
+    }
+}
+
+//CARREGAR OS DADOS SALVOS 
+void carregar_dados(industria empresas[], int *contador) {
+    const char *chave = "chave-secreta";  // Chave de criptografia simples
+    FILE *arquivo = fopen("industria_dados.bin", "rb");
+    if (arquivo == NULL) {
+        printf("Nenhum dado salvo encontrado.\n");
+        *contador = 0;
+        return;
+    }
+    fread(contador, sizeof(int), 1, arquivo);
+    fread(empresas, sizeof(industria), *contador, arquivo);
+    // DESCRIPTOGRAFA OS DADOS 
+    criptografar_dados(empresas, sizeof(industria) * (*contador), chave);
+    fclose(arquivo);
+    printf("Dados carregados com sucesso!\n");
+}
+
+//SALVAR OS DADOS 
 void salvar_dados(industria empresas[], int contador) {
+    const char *chave = "chave-secreta";  // CHAVE DA CRIPTOGRAFIA	
     FILE *arquivo = fopen("industria_dados.bin", "wb");
     if (arquivo == NULL) {
         printf("Erro ao abrir o arquivo para salvar.\n");
         return;
     }
 
+    // Criptografar os dados antes de salvar
+    criptografar_dados(empresas, sizeof(industria) * contador, chave);
     fwrite(&contador, sizeof(int), 1, arquivo);
-    fwrite(empresas, sizeof(industria), contador, arquivo); 
-
+    // Salva as indústrias criptografadas
+    fwrite(empresas, sizeof(industria), contador, arquivo);
+    // Reverte a criptografia após salvar
+    criptografar_dados(empresas, sizeof(industria) * contador, chave);
     fclose(arquivo);
     printf("Dados salvos com sucesso!\n");
-}
-
-//FUNÇÃO CARREGAR DADOS
-void carregar_dados(industria empresas[], int *contador) {
-    FILE *arquivo = fopen("industria_dados.bin", "rb");
-    if (arquivo == NULL) {
-        printf("Nenhum dado salvo encontrado. Iniciando com dados vazios.\n");
-        *contador = 0;
-        return;
-    }
-
-    fread(contador, sizeof(int), 1, arquivo); 
-    fread(empresas, sizeof(industria), *contador, arquivo); 
-
-    fclose(arquivo);
-    printf("Dados carregados com sucesso!\n");
 }
 
 //FUNÇÃO DE CADASTRAR UMA INDÚSTRIA
@@ -396,7 +413,7 @@ int main(){
     char user[] = "Admin";
     int senha_veri, senha_correta, user_correto, i, a;
     int senha[] = {12345};
-    carregar_dados(empresas, &contador);
+    carregar_dados(empresas, &contador);// CARREGA OS DADOS SALVOS
 
     //LOGIN
     do{
@@ -469,7 +486,7 @@ int main(){
                 gerar_relatorios(empresas, contador);
                 break;
             case 5:
-            	salvar_dados(empresas, contador);
+            	salvar_dados(empresas, contador);//SALVA OS DADOS ANTES DE FECHAR O PROGRAMA
                 printf("Saindo...");
                 return 0;
                 break;
