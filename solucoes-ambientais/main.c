@@ -117,7 +117,6 @@ void cadastrar_industria(industria empresas[], int*contador){
     empresas[*contador].cnpj[strcspn(empresas[*contador].cnpj, "\n")] = 0;
 
     printf("Nome Fantasia: ");
-    getchar();
     fgets(empresas[*contador].nome_fantasia, sizeof(empresas[*contador].nome_fantasia), stdin);
     empresas[*contador].nome_fantasia[strcspn(empresas[*contador].nome_fantasia, "\n")] = 0;
 
@@ -154,11 +153,10 @@ void cadastrar_industria(industria empresas[], int*contador){
 
     printf("\n--CONTATO--\n");
     printf("E-mail: ");
-    getchar();
     fgets(empresas[*contador].email, sizeof(empresas[*contador].email), stdin);
     empresas[*contador].email[strcspn(empresas[*contador].email, "\n")] = 0;
 
-    printf("\nTelefone: ");
+    printf("Telefone: ");
     fgets(empresas[*contador].telefone, sizeof(empresas[*contador].telefone), stdin);
     empresas[*contador].telefone[strcspn(empresas[*contador].telefone, "\n")] = 0;
 
@@ -205,7 +203,7 @@ void dados_empresa(industria empresas[], int contador){
             encontrou = 1;
 
             printf("\n--------------------------------------\n");
-            printf("      DADOS DA INDUSTRIA: %s       \n", empresas[i].nome_empresa);
+            printf(" DADOS DA INDUSTRIA: %s       \n", empresas[i].nome_empresa);
             printf("--------------------------------------\n");
             printf("--RESPONSÁVEL--\n");
             printf("Nome do Responsável: %s\n", empresas[i].nome_responsavel);
@@ -229,6 +227,7 @@ void dados_empresa(industria empresas[], int contador){
             printf("--------------------------------------\n");
             getch();
             system("cls");
+            return;
         }
     }
     if (encontrou == 0) {
@@ -269,7 +268,7 @@ void atualizar_dados_mensais(industria empresas[], int contador) {
             printf("Digite o custo estimado (R$): ");
             scanf("%f", &empresas[i].residuos_mensais[mes - 1].custo_mensal[mes - 1]);
 
-            printf("Atualização mensal adicionada com sucesso.\n");
+            printf("\nAtualização mensal adicionada com sucesso.\n");
             getch();
             system("cls");
             return;
@@ -277,6 +276,9 @@ void atualizar_dados_mensais(industria empresas[], int contador) {
     }
     if (encontrou == 0) {
         printf("Indústria com nome '%s' não encontrada.\n", nome_busca);
+        getch();
+        system("cls");
+        return;
     }
 }
 
@@ -335,35 +337,55 @@ void relatorio_global(industria empresas[], int contador){
         printf("Nenhuma indústria cadastrada.\n");
         return;
     }
-	//falta testar
 
-    float maior_residuos, menor_residuos;
-    char industria_maior[50], industria_menor[50];
+    int i, j;
+    float maior_residuos = 0, menor_residuos = -1;
+    float maior_custo = 0, menor_custo = -1;
+    char industria_maior_residuos[50], industria_menor_residuos[50];
+    char industria_maior_custo[50], industria_menor_custo[50];
+    char estado_maior_residuos[30], estado_menor_residuos[30];
 
-    for (int i = 0; i < contador; i++) {
-        float total_residuos = 0;
-        for (int mes = 0; mes < 6; mes++) {
-            total_residuos += empresas[i].residuos_mensais[mes].residuos_mensal[mes];
+    for (i = 0; i < contador; i++) {
+        float total_residuos = 0, total_custos = 0;
+
+        for (j = 0; j < 6; j++) {
+            total_residuos += empresas[i].residuos_mensais[j].residuos_mensal[j];
+            total_custos += empresas[i].residuos_mensais[j].custo_mensal[j];
         }
 
         if (total_residuos > maior_residuos) {
             maior_residuos = total_residuos;
-            strcpy(industria_maior, empresas[i].nome_empresa);
+            strcpy(industria_maior_residuos, empresas[i].nome_empresa);
         }
-        if (total_residuos < menor_residuos) {
+        if (menor_residuos == -1.0 || total_residuos < menor_residuos) {
             menor_residuos = total_residuos;
-            strcpy(industria_menor, empresas[i].nome_empresa);
+            strcpy(industria_menor_residuos, empresas[i].nome_empresa);
+        }
+
+        if (total_custos > maior_custo) {
+            maior_custo = total_custos;
+            strcpy(industria_maior_custo, empresas[i].nome_empresa);
+        }
+        if (menor_custo == -1.0 || total_custos < menor_custo) {
+            menor_custo = total_custos;
+            strcpy(industria_menor_custo, empresas[i].nome_empresa);
+        }
+        
+        for (i = 0; i < contador; i++) {
+            if (strcmp(empresas[i].nome_empresa, industria_maior_residuos) == 0) {
+                strcpy(estado_maior_residuos, empresas[i].estado_empresa);
+            }  
+            if (strcmp(empresas[i].nome_empresa, industria_menor_residuos) == 0) {
+                strcpy(estado_menor_residuos, empresas[i].estado_empresa);
+            }
         }
     }
 
-    //
-    //
-
-    printf("Indústrias que MAIS trataram resíduos no último semestre: %s (%.2f toneladas)\n", industria_maior, maior_residuos);
-    printf("Indústrias que MENOS trataram resíduos no último semestre: %s (%.2f toneladas)\n", industria_menor, menor_residuos);
-    printf("Indústria com MAIOR aporte financeiro semestral: \n");
-    printf("Indústria com MENOR aporte financeiro semestral: \n");
-    printf("Região onde estão localizadas as indústrias que tratam um maior volume de resíduos industriais: \n");
+    printf("Indústrias que MAIS trataram resíduos no último semestre: %s (%.2f toneladas)\n", industria_maior_residuos, maior_residuos);
+    printf("Indústrias que MENOS trataram resíduos no último semestre: %s (%.2f toneladas)\n", industria_menor_residuos, menor_residuos);
+    printf("Indústria com MAIOR aporte financeiro semestral: %s (R$ %.2f)\n", industria_maior_custo, maior_custo);
+    printf("Indústria com MENOR aporte financeiro semestral: %s (R$ %.2f)\n", industria_menor_custo, menor_custo);
+    printf("Região onde estão localizadas as indústrias que tratam um maior volume de resíduos industriais: %s\n", estado_maior_residuos);
 
 	getch();
     system("cls");
@@ -406,7 +428,7 @@ void gerar_relatorios(industria empresas[], int contador){
                 system("cls");
                 break;
             case 2:
-                printf("Global"); //criar função
+                relatorio_global(empresas, contador);
                 getch();
                 system("cls");
                 break;
@@ -523,3 +545,4 @@ int main(){
 
     return 0;
 }
+
