@@ -184,7 +184,7 @@ void procura(industria empresas[], int contador){
     }
 }
 
-//FUNÇÃO INCREMENTAL DE VERIFICAÇÃO DE DADOS DA INDUSTRIA
+//FUNÇÃO DE VERIFICAÇÃO DE DADOS DA INDUSTRIA
 void dados_empresa(industria empresas[], int contador){
  	printf("--------------------------------------\n");
     printf("        INDUSTRIAS CADASTRADAS        \n");
@@ -357,38 +357,43 @@ void relatorio_global(industria empresas[], int contador){
             total_custos += empresas[i].residuos_mensais[j].custo_mensal[j];
         }
 
-        if (total_residuos > maior_residuos) {
-            maior_residuos = total_residuos;
-            strcpy(industria_maior_residuos, empresas[i].nome_empresa);
-        }
         if (menor_residuos == -1.0 || total_residuos < menor_residuos) {
             menor_residuos = total_residuos;
             strcpy(industria_menor_residuos, empresas[i].nome_empresa);
+            strcpy(estado_menor_residuos, empresas[i].estado);
+        }
+
+        if (total_residuos > maior_residuos) {
+            maior_residuos = total_residuos;
+            strcpy(industria_maior_residuos, empresas[i].nome_empresa);
+            strcpy(estado_maior_residuos, empresas[i].estado);
+        }
+
+        if (menor_custo == -1.0 || total_custos < menor_custo) {
+            menor_custo = total_custos;
+            strcpy(industria_menor_custo, empresas[i].nome_empresa);
         }
 
         if (total_custos > maior_custo) {
             maior_custo = total_custos;
             strcpy(industria_maior_custo, empresas[i].nome_empresa);
         }
-        if (menor_custo == -1.0 || total_custos < menor_custo) {
-            menor_custo = total_custos;
-            strcpy(industria_menor_custo, empresas[i].nome_empresa);
-        }
-        if (strcmp(empresas[i].nome_empresa, industria_maior_residuos) == 0) {
-                strcpy(estado_maior_residuos, empresas[i].estado);
-        }
-        if (strcmp(empresas[i].nome_empresa, industria_menor_residuos) == 0) {
-                strcpy(estado_menor_residuos, empresas[i].estado);
-        }
-
-
     }
 
-    printf("-Indústrias que MAIS trataram resíduos no último semestre: %s (%.2f toneladas)\n", industria_maior_residuos, maior_residuos);
-    printf("\n-Indústrias que MENOS trataram resíduos no último semestre: %s (%.2f toneladas)\n", industria_menor_residuos, menor_residuos);
-    printf("\n-Indústria com MAIOR aporte financeiro semestral: %s (R$ %.2f)\n", industria_maior_custo, maior_custo);
-    printf("\n-Indústria com MENOR aporte financeiro semestral: %s (R$ %.2f)\n", industria_menor_custo, menor_custo);
-    printf("\n-Região onde estão localizadas as indústrias que tratam um maior volume de resíduos industriais: %s\n", estado_maior_residuos);
+    printf("INDÚSTRIAS COM MAIOR TRATAMENTO DE RESÍDUOS:\n");
+    printf(" - %s (%.2f toneladas)\n", industria_maior_residuos, maior_residuos);
+    printf(" - Localizada no estado: %s\n", estado_maior_residuos);
+
+    printf("\nINDÚSTRIAS COM MENOR TRATAMENTO DE RESÍDUOS:\n");
+    printf(" - %s (%.2f toneladas)\n", industria_menor_residuos, menor_residuos);
+    printf(" - Localizada no estado: %s\n", estado_menor_residuos);
+
+    printf("\n--------------------------------------\n");
+    printf("INDÚSTRIA COM MAIOR APORTE FINANCEIRO SEMESTRAL:\n");
+    printf(" - %s (R$ %.2f)\n", industria_maior_custo, maior_custo);
+
+    printf("\nINDÚSTRIA COM MENOR APORTE FINANCEIRO SEMESTRAL:\n");
+    printf(" - %s (R$ %.2f)\n", industria_menor_custo, menor_custo);
 
 	getch();
     system("cls");
