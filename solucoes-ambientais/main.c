@@ -117,6 +117,7 @@ void cadastrar_industria(industria empresas[], int*contador){
     empresas[*contador].cnpj[strcspn(empresas[*contador].cnpj, "\n")] = 0;
 
     printf("Nome Fantasia: ");
+    getchar();
     fgets(empresas[*contador].nome_fantasia, sizeof(empresas[*contador].nome_fantasia), stdin);
     empresas[*contador].nome_fantasia[strcspn(empresas[*contador].nome_fantasia, "\n")] = 0;
 
@@ -143,6 +144,7 @@ void cadastrar_industria(industria empresas[], int*contador){
     empresas[*contador].cidade[strcspn(empresas[*contador].cidade, "\n")] = 0;
 
     printf("Estado: ");
+    getchar();
     fgets(empresas[*contador].estado, sizeof(empresas[*contador].estado), stdin);
     empresas[*contador].estado[strcspn(empresas[*contador].estado, "\n")] = 0;
 
@@ -153,10 +155,12 @@ void cadastrar_industria(industria empresas[], int*contador){
 
     printf("\n--CONTATO--\n");
     printf("E-mail: ");
+    getchar();
     fgets(empresas[*contador].email, sizeof(empresas[*contador].email), stdin);
     empresas[*contador].email[strcspn(empresas[*contador].email, "\n")] = 0;
 
     printf("Telefone: ");
+    getchar();
     fgets(empresas[*contador].telefone, sizeof(empresas[*contador].telefone), stdin);
     empresas[*contador].telefone[strcspn(empresas[*contador].telefone, "\n")] = 0;
 
@@ -314,7 +318,7 @@ void insumo_semestral(industria empresas[], int contador){
 
             printf("\n--------------------------------------\n");
             printf("Relatório Semestral da Indústria: %s\n", empresas[i].nome_empresa);
-            printf("Total de insumos tratados semestralmente: %.2f\n", total_residuos);
+            printf("Total de insumos tratados semestralmente: %.1f (t)\n", total_residuos);
             printf("Total de gastos semestrais: R$ %.2f\n", total_custos);
             getch();
             system("cls");
@@ -370,22 +374,21 @@ void relatorio_global(industria empresas[], int contador){
             menor_custo = total_custos;
             strcpy(industria_menor_custo, empresas[i].nome_empresa);
         }
-        
-        for (i = 0; i < contador; i++) {
-            if (strcmp(empresas[i].nome_empresa, industria_maior_residuos) == 0) {
-                strcpy(estado_maior_residuos, empresas[i].estado_empresa);
-            }  
-            if (strcmp(empresas[i].nome_empresa, industria_menor_residuos) == 0) {
-                strcpy(estado_menor_residuos, empresas[i].estado_empresa);
-            }
+        if (strcmp(empresas[i].nome_empresa, industria_maior_residuos) == 0) {
+                strcpy(estado_maior_residuos, empresas[i].estado);
         }
+        if (strcmp(empresas[i].nome_empresa, industria_menor_residuos) == 0) {
+                strcpy(estado_menor_residuos, empresas[i].estado);
+        }
+
+
     }
 
-    printf("Indústrias que MAIS trataram resíduos no último semestre: %s (%.2f toneladas)\n", industria_maior_residuos, maior_residuos);
-    printf("Indústrias que MENOS trataram resíduos no último semestre: %s (%.2f toneladas)\n", industria_menor_residuos, menor_residuos);
-    printf("Indústria com MAIOR aporte financeiro semestral: %s (R$ %.2f)\n", industria_maior_custo, maior_custo);
-    printf("Indústria com MENOR aporte financeiro semestral: %s (R$ %.2f)\n", industria_menor_custo, menor_custo);
-    printf("Região onde estão localizadas as indústrias que tratam um maior volume de resíduos industriais: %s\n", estado_maior_residuos);
+    printf("-Indústrias que MAIS trataram resíduos no último semestre: %s (%.2f toneladas)\n", industria_maior_residuos, maior_residuos);
+    printf("\n-Indústrias que MENOS trataram resíduos no último semestre: %s (%.2f toneladas)\n", industria_menor_residuos, menor_residuos);
+    printf("\n-Indústria com MAIOR aporte financeiro semestral: %s (R$ %.2f)\n", industria_maior_custo, maior_custo);
+    printf("\n-Indústria com MENOR aporte financeiro semestral: %s (R$ %.2f)\n", industria_menor_custo, menor_custo);
+    printf("\n-Região onde estão localizadas as indústrias que tratam um maior volume de resíduos industriais: %s\n", estado_maior_residuos);
 
 	getch();
     system("cls");
@@ -545,4 +548,3 @@ int main(){
 
     return 0;
 }
-
