@@ -318,10 +318,7 @@ void insumo_semestral(industria empresas[], int contador){
             printf("Total de gastos semestrais: R$ %.2f\n", total_custos);
 
             printf("\n--------------------------------------\n");
-            printf("Salvar dados em: \n");
-            printf("1. TXT\n");
-            printf("2. XLS\n");
-            printf("3. CSV\n");;
+            printf("\nSalvar dados em:\n1. TXT\n2. XLS\n3. CSV\n");
             scanf("%d", &op);
 
             if(op < 1 || op > 3){
