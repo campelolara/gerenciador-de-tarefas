@@ -381,7 +381,7 @@ void insumo_semestral(industria empresas[], int contador){
 }
 
 //FUNÇÃO PARA SALVAR UM RELATÓRIO GLOBAL
-void salvar_relatorio(const char *nome_arquivo, const char *formato,
+void salvar_relatorio_global(const char *nome_arquivo, const char *formato,
                       char industria_maior_residuos[], char estado_maior_residuos[], float maior_residuos,
                       char industria_menor_residuos[], char estado_menor_residuos[], float menor_residuos,
                       char industria_maior_custo[], float maior_custo, char industria_menor_custo[], float menor_custo) {
@@ -480,17 +480,17 @@ void relatorio_global(industria empresas[], int contador){
     }
     switch(op){
         case 1:
-            salvar_relatorio("relatorio_global.txt", "TXT", industria_maior_residuos, estado_maior_residuos, maior_residuos,
+            salvar_relatorio_global("relatorio_global.txt", "TXT", industria_maior_residuos, estado_maior_residuos, maior_residuos,
                              industria_menor_residuos, estado_menor_residuos, menor_residuos, industria_maior_custo, maior_custo,
                              industria_menor_custo, menor_custo);
             break;
         case 2:
-            salvar_relatorio("relatorio_global.xls", "XLS", industria_maior_residuos, estado_maior_residuos, maior_residuos,
+            salvar_relatorio_global("relatorio_global.xls", "XLS", industria_maior_residuos, estado_maior_residuos, maior_residuos,
                              industria_menor_residuos, estado_menor_residuos, menor_residuos, industria_maior_custo, maior_custo,
                              industria_menor_custo, menor_custo);
             break;
         case 3:
-            salvar_relatorio("relatorio_global.csv", "CSV", industria_maior_residuos, estado_maior_residuos, maior_residuos,
+            salvar_relatorio_global("relatorio_global.csv", "CSV", industria_maior_residuos, estado_maior_residuos, maior_residuos,
                              industria_menor_residuos, estado_menor_residuos, menor_residuos, industria_maior_custo, maior_custo,
                              industria_menor_custo, menor_custo);
             break;
