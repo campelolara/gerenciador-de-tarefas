@@ -58,7 +58,7 @@ void carregar_dados(industria empresas[], int *contador) {
     // DESCRIPTOGRAFA OS DADOS
     criptografar_dados(empresas, sizeof(industria) * (*contador), chave);
     fclose(arquivo);
-    printf("Dados carregados com sucesso!\n");
+    //printf("Dados carregados com sucesso!\n");
 }
 
 //SALVAR OS DADOS
@@ -566,13 +566,13 @@ int main(){
     //LOGIN
     do{
         printf("--------------------------------------\n");
-        printf("                 NOME                 \n");
+        printf("               ECOTECH                \n");
         printf("    STARTUP DE SOLUÇÕES AMBIENTAIS    \n");
         printf("--------------------------------------\n");
         printf("                LOGIN                 \n");
         printf("Usuário: ");
         scanf("%s", user_veri);
-        printf("\nSenha: ");
+        printf("Senha: ");
         scanf("%d", &senha_veri);
 
         user_correto = 0;
@@ -605,8 +605,8 @@ int main(){
         printf("--------------------------------------\n");
         printf("             TELA INICIAL               \n");
         printf("--------------------------------------\n");
-        printf("1. Ver dados das indústrias\n");
-        printf("2. Cadastrar uma nova indústria\n");
+        printf("1. Cadastrar uma nova indústria\n");
+        printf("2. Ver dados das indústrias\n");
         printf("3. Atualizar dados mensais de resíduos\n");
         printf("4. Gerar relatórios\n");
         printf("5. Sair\n");
@@ -621,10 +621,10 @@ int main(){
         system("cls");
         switch(a){
             case 1:
-                dados_empresa(empresas, contador);
+                cadastrar_industria(empresas, &contador);
                 break;
             case 2:
-                cadastrar_industria(empresas, &contador);
+                dados_empresa(empresas, contador);
                 break;
             case 3:
                 atualizar_dados_mensais(empresas, contador);
