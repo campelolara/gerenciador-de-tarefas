@@ -29,7 +29,6 @@ typedef struct{
     char cep[10];
     char email[101];
     char telefone[16];
-
     dados_mensais residuos_mensais[6]; //atualizações mensais por empresa
     int total_meses;
 }industria;
@@ -70,7 +69,6 @@ void salvar_dados(industria empresas[], int contador) {
         printf("Erro ao abrir o arquivo para salvar.\n");
         return;
     }
-
     // Criptografar os dados antes de salvar
     criptografar_dados(empresas, sizeof(industria) * contador, chave);
     fwrite(&contador, sizeof(int), 1, arquivo);
@@ -88,7 +86,6 @@ void cadastrar_industria(industria empresas[], int*contador){
         printf("Limite de cadastro atingido.\n");
         return;
     }
-
     printf("--------------------------------------\n");
     printf("          CADASTRO INDÚSTRIA          \n");
     printf("--------------------------------------\n");
@@ -261,7 +258,6 @@ void atualizar_dados_mensais(industria empresas[], int contador) {
     for (i = 0; i < contador; i++) {
         if (strcmp(empresas[i].nome_empresa, nome_busca) == 0) {
             encontrou = 1;
-
             int mes;
             printf("Digite o mês (1-12): ");
             scanf("%d", &mes);
@@ -315,14 +311,70 @@ void insumo_semestral(industria empresas[], int contador){
                 total_residuos += empresas[i].residuos_mensais[mes].residuos_mensal[mes];
                 total_custos += empresas[i].residuos_mensais[mes].custo_mensal[mes];
             }
-
+            int op;
             printf("\n--------------------------------------\n");
             printf("Relatório Semestral da Indústria: %s\n", empresas[i].nome_empresa);
             printf("Total de insumos tratados semestralmente: %.1f (t)\n", total_residuos);
             printf("Total de gastos semestrais: R$ %.2f\n", total_custos);
-            getch();
+
+            printf("\n--------------------------------------\n");
+            printf("Salvar dados em: \n");
+            printf("1. TXT\n");
+            printf("2. XLS\n");
+            printf("3. CSV\n");;
+            scanf("%d", &op);
+
+            if(op < 1 || op > 3){
+            printf("\nOpção inválida");
+            getchar();
             system("cls");
-            return;
+            }
+
+            switch(op){
+                case 1: {
+                    FILE *arquivo = fopen("relatorio_individual.txt", "w");
+                    if(arquivo == NULL) {
+                        printf("Erro na abertura do arquivo!");
+                    } else {
+                        fprintf(arquivo, "Relatório Semestral da Indústria: %s\n", empresas[i].nome_empresa);
+                        fprintf(arquivo, "Total de insumos tratados semestralmente: %.1f (t)\n", total_residuos);
+                        fprintf(arquivo, "Total de gastos semestrais: R$ %.2f\n", total_custos);
+                        fclose(arquivo);
+                        printf("Relatório salvo com sucesso!\n");
+                    }
+                    break;
+                }
+                case 2: {
+                    FILE *arquivo = fopen("relatorio_individual.xls", "w");
+                    if(arquivo == NULL) {
+                        printf("Erro na abertura do arquivo!");
+                    } else {
+                        fprintf(arquivo, "Relatório Semestral da Indústria: %s\n", empresas[i].nome_empresa);
+                        fprintf(arquivo, "Total de insumos tratados semestralmente: %.1f (t)\n", total_residuos);
+                        fprintf(arquivo, "Total de gastos semestrais: R$ %.2f\n", total_custos);
+                        fclose(arquivo);
+                        printf("Relatório salvo com sucesso!\n");
+                    }
+                    break;
+                }
+                case 3: {
+                    FILE *arquivo = fopen("relatorio_individual.csv", "w");
+                    if(arquivo == NULL) {
+                        printf("Erro na abertura do arquivo!");
+                    } else {
+                        fprintf(arquivo, "Relatório Semestral da Indústria: %s\n", empresas[i].nome_empresa);
+                        fprintf(arquivo, "Total de insumos tratados semestralmente: %.1f (t)\n", total_residuos);
+                        fprintf(arquivo, "Total de gastos semestrais: R$ %.2f\n", total_custos);
+                        fclose(arquivo);
+                        printf("Relatório salvo com sucesso!\n");
+                    }
+                    break;
+                }
+                default:
+                    printf("Opção inválida\n");
+                    break;
+
+            }
         }
     }
     if (encontrou == 0) {
@@ -331,17 +383,43 @@ void insumo_semestral(industria empresas[], int contador){
 
 }
 
+//FUNÇÃO PARA SALVAR UM RELATÓRIO GLOBAL
+void salvar_relatorio(const char *nome_arquivo, const char *formato,
+                      char industria_maior_residuos[], char estado_maior_residuos[], float maior_residuos,
+                      char industria_menor_residuos[], char estado_menor_residuos[], float menor_residuos,
+                      char industria_maior_custo[], float maior_custo, char industria_menor_custo[], float menor_custo) {
+    FILE *arquivo = fopen(nome_arquivo, "w");
+    if (arquivo == NULL) {
+        printf("Erro ao criar o arquivo %s!\n", nome_arquivo);
+        return;
+    }
+    fprintf(arquivo, "INDÚSTRIAS COM MAIOR TRATAMENTO DE RESÍDUOS:\n");
+    fprintf(arquivo, "- %s (%.2f toneladas)\n", industria_maior_residuos, maior_residuos);
+    fprintf(arquivo, "- Localizada no estado: %s\n", estado_maior_residuos);
+
+    fprintf(arquivo, "\nINDÚSTRIAS COM MENOR TRATAMENTO DE RESÍDUOS:\n");
+    fprintf(arquivo, "- %s (%.2f toneladas)\n", industria_menor_residuos, menor_residuos);
+    fprintf(arquivo, "- Localizada no estado: %s\n", estado_menor_residuos);
+
+    fprintf(arquivo, "\nINDÚSTRIA COM MAIOR APORTE FINANCEIRO SEMESTRAL:\n");
+    fprintf(arquivo, "- %s (R$ %.2f)\n", industria_maior_custo, maior_custo);
+
+    fprintf(arquivo, "\nINDÚSTRIA COM MENOR APORTE FINANCEIRO SEMESTRAL:\n");
+    fprintf(arquivo, "- %s (R$ %.2f)\n", industria_menor_custo, menor_custo);
+
+    fclose(arquivo);
+    printf("Relatório salvo com sucesso como %s.\n", formato);
+}
+
 //FUNÇÃO DE GERAR RELATÓRIO GLOBAL
 void relatorio_global(industria empresas[], int contador){
     printf("--------------------------------------\n");
     printf("           RELATÓRIO GLOBAL           \n");
     printf("--------------------------------------\n");
-
     if (contador == 0) {
         printf("Nenhuma indústria cadastrada.\n");
         return;
     }
-
     int i, j;
     float maior_residuos = 0, menor_residuos = -1;
     float maior_custo = 0, menor_custo = -1;
@@ -351,7 +429,6 @@ void relatorio_global(industria empresas[], int contador){
 
     for (i = 0; i < contador; i++) {
         float total_residuos = 0, total_custos = 0;
-
         for (j = 0; j < 6; j++) {
             total_residuos += empresas[i].residuos_mensais[j].residuos_mensal[j];
             total_custos += empresas[i].residuos_mensais[j].custo_mensal[j];
@@ -379,7 +456,6 @@ void relatorio_global(industria empresas[], int contador){
             strcpy(industria_maior_custo, empresas[i].nome_empresa);
         }
     }
-
     printf("INDÚSTRIAS COM MAIOR TRATAMENTO DE RESÍDUOS:\n");
     printf(" - %s (%.2f toneladas)\n", industria_maior_residuos, maior_residuos);
     printf(" - Localizada no estado: %s\n", estado_maior_residuos);
@@ -395,6 +471,33 @@ void relatorio_global(industria empresas[], int contador){
     printf("\nINDÚSTRIA COM MENOR APORTE FINANCEIRO SEMESTRAL:\n");
     printf(" - %s (R$ %.2f)\n", industria_menor_custo, menor_custo);
 
+    int op;
+    printf("\n--------------------------------------\n");
+    printf("\nSalvar dados em:\n1. TXT\n2. XLS\n3. CSV\n");
+    scanf("%d", &op);
+
+    if(op < 1 || op > 3){
+        printf("\nOpção inválida");
+        getchar();
+        system("cls");
+    }
+    switch(op){
+        case 1:
+            salvar_relatorio("relatorio_global.txt", "TXT", industria_maior_residuos, estado_maior_residuos, maior_residuos,
+                             industria_menor_residuos, estado_menor_residuos, menor_residuos, industria_maior_custo, maior_custo,
+                             industria_menor_custo, menor_custo);
+            break;
+        case 2:
+            salvar_relatorio("relatorio_global.xls", "XLS", industria_maior_residuos, estado_maior_residuos, maior_residuos,
+                             industria_menor_residuos, estado_menor_residuos, menor_residuos, industria_maior_custo, maior_custo,
+                             industria_menor_custo, menor_custo);
+            break;
+        case 3:
+            salvar_relatorio("relatorio_global.csv", "CSV", industria_maior_residuos, estado_maior_residuos, maior_residuos,
+                             industria_menor_residuos, estado_menor_residuos, menor_residuos, industria_maior_custo, maior_custo,
+                             industria_menor_custo, menor_custo);
+            break;
+    }
 	getch();
     system("cls");
     return;
@@ -403,7 +506,6 @@ void relatorio_global(industria empresas[], int contador){
 //FUNÇÃO DE INICIALIZAÇÃO DE GERAR RELATÓRIOS
 void gerar_relatorios(industria empresas[], int contador){
     int opcao;
-
     do{
 
         printf("--------------------------------------\n");
@@ -421,14 +523,12 @@ void gerar_relatorios(industria empresas[], int contador){
         printf("Selecione uma opção: ");
         scanf("%d", &opcao);
 
-
         if(opcao < 1 || opcao > 3){
             printf("Opção inválida");
             getchar();
             system("cls");
         }
         system("cls");
-
         switch(opcao){
             case 1:
                 insumo_semestral(empresas, contador);
@@ -453,7 +553,6 @@ void gerar_relatorios(industria empresas[], int contador){
                 break;
         }
     } while(opcao != 3);
-
 }
 
 //PROGRAMA PRINCIPAL
@@ -523,7 +622,6 @@ int main(){
             system("cls");
         }
         system("cls");
-
         switch(a){
             case 1:
                 dados_empresa(empresas, contador);
